@@ -32,7 +32,7 @@ namespace raytrace
 
     // 色の反射率最大のものを得る。ロシアンルーレットで使う
     // ロシアンルーレットの閾値は任意だが、色の反射率等を使うとより良い
-    double russian_roulette_probability = std::max(now_object.color.x, std::max(now_object.color.y, now_object.color.z));
+    double russian_roulette_probability = std::max(now_object.color().x, std::max(now_object.color().y, now_object.color().z));
 
     // 反射回数が一定以上になったらロシアンルーレットの確率を急上昇させる
     // (スタックオーバーフロー対策)
@@ -42,7 +42,7 @@ namespace raytrace
 
     if (depth > DEPTH) {
       if (rnd->next01() >= russian_roulette_probability) {
-        return now_object.emission;
+        return now_object.emission();
       }
     } else {
       russian_roulette_probability = 1.0; // ロシアンルーレットを実行しなかった
@@ -51,7 +51,7 @@ namespace raytrace
     color incoming_radiance;
     color weight = 1.0; // ?? colorクラスにリテラルを代入している
 
-    switch (now_object.reflection_type) {
+    switch (now_object.reflection_type()) {
       case reflection_t::diffuse: // 完全拡散面
       {
         // この基底に対する半球内で次の例を飛ばす
@@ -73,7 +73,7 @@ namespace raytrace
 
         incoming_radiance = radiance(ray(hitpoint.position, dir), rnd, depth+1);
 
-        weight = now_object.color / russian_roulette_probability;
+        weight = now_object.color() / russian_roulette_probability;
       }
       break;
 
@@ -84,7 +84,7 @@ namespace raytrace
         vec3 dir = aray.dir - hitpoint.normal * 2.0 * vec3::dot(hitpoint.normal, aray.dir);
         incoming_radiance = radiance(ray(hitpoint.position, dir),rnd, depth+1);
 
-        weight = now_object.color / russian_roulette_probability;
+        weight = now_object.color() / russian_roulette_probability;
       }
       break;
 
@@ -102,7 +102,7 @@ namespace raytrace
 
         if (cos2t < 0.0) { // 全反射
           incoming_radiance = radiance(reflection_ray, rnd, depth+1);
-          weight = now_object.color / russian_roulette_probability;
+          weight = now_object.color() / russian_roulette_probability;
           break;
         }
 
@@ -124,22 +124,22 @@ namespace raytrace
         if (depth > 2) {
           if (rnd->next01() < probability) {
             incoming_radiance = radiance(reflection_ray, rnd, depth+1) * Re;
-            weight = now_object.color / (probability * russian_roulette_probability);
+            weight = now_object.color() / (probability * russian_roulette_probability);
           } else {
             incoming_radiance = radiance(refraction_ray, rnd, depth+1) * Tr;
-            weight = now_object.color / ((1.0 - probability) * russian_roulette_probability);
+            weight = now_object.color() / ((1.0 - probability) * russian_roulette_probability);
           }
         } else {
           incoming_radiance =
             radiance(reflection_ray, rnd, depth+1) * Re +
             radiance(refraction_ray, rnd, depth+1) * Tr;
-          weight = now_object.color / russian_roulette_probability;
+          weight = now_object.color() / russian_roulette_probability;
         }
       }
       break;
     }
 
-    return now_object.emission + vec3::multiply(weight, incoming_radiance);
+    return now_object.emission() + vec3::multiply(weight, incoming_radiance);
   }
 } // namespace raytrace
 

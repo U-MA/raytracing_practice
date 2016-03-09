@@ -1,23 +1,26 @@
 #ifndef _RAYTRACE_SPHERE_H_
 #define _RAYTRACE_SPHERE_H_
 
+#include "material.h"
+#include "shape.h"
 #include "constant.h"
 
 namespace raytrace
 {
 
-  struct sphere
+  struct sphere : public shape
   {
-    sphere(double radius, const vec3& position, const color& emission, const color& color, const reflection_t reflection_type)
-      : radius(radius), position(position), emission(emission), color(color), reflection_type(reflection_type)
+    sphere(double radius, const vec3& position, const raytrace::color& emission, 
+           const raytrace::color& color, const reflection_t reflection_type)
+      : radius_(radius), position_(position), emission_(emission), color_(color), reflection_type_(reflection_type)
     {}
 
     // rayとの交差判定を行う
-    bool intersect(const ray& ray, hitpoint* hitpoint) const
+    bool intersect(const ray& ray, hitpoint* hitpoint) const override
     {
-      const vec3 po = position - ray.org;
+      const vec3 po = position_ - ray.org;
       const double b = vec3::dot(po, ray.dir);
-      const double D4 = b * b - vec3::dot(po, po) + radius * radius; // 判別式
+      const double D4 = b * b - vec3::dot(po, po) + radius_ * radius_; // 判別式
 
       if (D4 < 0.0) {
         return false;
@@ -37,15 +40,27 @@ namespace raytrace
       }
 
       hitpoint->position = ray.org + hitpoint->distance * ray.dir;
-      hitpoint->normal   = vec3::normalize(hitpoint->position - position);
+      hitpoint->normal   = vec3::normalize(hitpoint->position - position_);
       return true;
     }
 
-    double radius;
-    vec3 position;
-    color emission;
-    color color;
-    reflection_t reflection_type;
+    vec3 color() const override {
+      return color_;
+    }
+
+    vec3 emission() const override {
+      return emission_;
+    }
+
+    reflection_t reflection_type() const override {
+      return reflection_type_;
+    }
+
+    double radius_;
+    vec3 position_;
+    raytrace::color emission_;
+    raytrace::color color_;
+    reflection_t reflection_type_;
   };
 
 } // namespace raytrace
