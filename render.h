@@ -68,18 +68,23 @@ namespace raytrace
               screen_x * ((rx + x) / width - 0.5) +
               screen_y * ((ry + y) / height - 0.5);
 
-            // レイを飛ばす方向
-            // カメラからサブピクセル方向
-            const vec3 dir = vec3::normalize(screen_position - camera_position);
-
             // 1つのサブピクセルにつき、samples回サンプリング
             for (int s = 0; s < samples; ++s) {
+              // レイを飛ばす方向
+              // カメラからサブピクセル方向
+              const vec3 dir = vec3::normalize(screen_position - camera_position);
+ 
               // カメラからサブピクセルのスクリーン座標に向かってレイを飛ばす
-              accum_radiance += radiance(ray(camera_position, dir), &rnd, 0) / (samples * (supersamples * supersamples));
+              accum_radiance = 
+                accum_radiance + radiance(ray(camera_position, dir), &rnd, 0) / samples / (supersamples * supersamples);
+              //std::cerr << "[ACCUM_RADIANCE] " << accum_radiance.x << ", " << accum_radiance.y << ", " <<
+              //  accum_radiance.z << std::endl;
             }
-            image[image_idx] += accum_radiance;
+            image[image_idx] = image[image_idx] + accum_radiance;
           }
         }
+        //std::cerr << "[IMAGE] " << image[image_idx].x << ", " << image[image_idx].y << ", " <<
+        //  image[image_idx].z << std::endl;
       }
     }
     return image;

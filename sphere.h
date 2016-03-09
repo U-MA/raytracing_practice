@@ -6,7 +6,6 @@
 namespace raytrace
 {
 
-
   struct sphere
   {
     sphere(double radius, const vec3& position, const color& emission, const color& color, const reflection_t reflection_type)

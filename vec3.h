@@ -15,7 +15,7 @@ namespace raytrace
     // 大きさを1にする
     static vec3 normalize(const vec3& v)
     {
-      return v / v.length();
+      return v * (1.0 / v.length());
     }
 
     // 内積を求める
@@ -67,11 +67,6 @@ namespace raytrace
     vec3 operator/(double rhs) const
     {
       return vec3(x / rhs, y / rhs, z / rhs);
-    }
-
-    vec3 operator+=(const vec3& rhs) const
-    {
-      return *this + rhs;
     }
 
     double x;
