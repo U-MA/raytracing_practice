@@ -2,6 +2,7 @@
 #define _RAYTRACE_SCENE_H_
 
 #include "sphere.h"
+#include "triangle.h"
 
 namespace raytrace
 {
@@ -22,18 +23,26 @@ namespace raytrace
     sphere(15.0, vec3(50.0,    90.0, 81.6),      color(36, 36, 36), color(),                 reflection_t::diffuse),    // 照明
   };
 
+  const std::vector<triangle> triangles = {
+    triangle(vec3(65.0, 20.0, 20.0), vec3(27.0, 16.5, 47.0), vec3(77.0, 16.5, 78.0),
+             color(), color(0.25, 0.75, 0.75), reflection_t::diffuse),
+  };
+
   // シーンオブジェクトの配置
   void init_scene()
   {
     for (int i=0; i < spheres.size(); ++i) {
       g_shapes.push_back(&spheres[i]);
     }
+    for (int i=0; i < triangles.size(); ++i) {
+      g_shapes.push_back(&triangles[i]);
+    }
   }
 
   // シーンとの交差判定
   bool intersect_scene(const ray& ray, intersection* intersection)
   {
-    const size_t n = spheres.size();
+    const size_t n = g_shapes.size();
 
     // intersectionの初期化
     intersection->hitpoint.distance = constant::inf;
