@@ -5,7 +5,10 @@
 
 namespace raytrace
 {
+  // シーンオブジェクト
+  std::vector<const shape*> g_shapes;
 
+  // scene.hのみで使用する
   const std::vector<sphere> spheres = {
     sphere(1e5,  vec3(1e5+1,   40.8, 81.6),      color(),           color(0.75, 0.25, 0.25), reflection_t::diffuse),    // 左
     sphere(1e5,  vec3(-1e5+99, 40.8, 81.6),      color(),           color(0.25, 0.25, 0.75), reflection_t::diffuse),    // 右
@@ -18,6 +21,14 @@ namespace raytrace
     sphere(16.5, vec3(77.0,    16.5, 78.0),      color(),           color(0.99, 0.99, 0.99), reflection_t::reflection), // ガラス
     sphere(15.0, vec3(50.0,    90.0, 81.6),      color(36, 36, 36), color(),                 reflection_t::diffuse),    // 照明
   };
+
+  // シーンオブジェクトの配置
+  void init_scene()
+  {
+    for (int i=0; i < spheres.size(); ++i) {
+      g_shapes.push_back(&spheres[i]);
+    }
+  }
 
   // シーンとの交差判定
   bool intersect_scene(const ray& ray, intersection* intersection)

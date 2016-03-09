@@ -35,6 +35,9 @@ namespace raytrace
     const vec3 screen_y = vec3::normalize(vec3::cross(screen_x, camera_dir)) * screen_height;
     const vec3 screen_center = camera_position + camera_dir * screen_dist;
 
+    // シーンオブジェクトの配置
+    init_scene();
+
     std::vector<color> image(width * height, color());
 
     for (int y = 0; y < height; ++y) {

@@ -23,7 +23,7 @@ namespace raytrace
       return BACKGROUND_COLOR;
     }
 
-    const sphere& now_object = spheres[intersection.object_id];
+    const shape& now_object = *g_shapes[intersection.object_id];
     const hitpoint& hitpoint = intersection.hitpoint;
 
     // 交差位置の法線(物体からのレイを考慮)
