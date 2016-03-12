@@ -9,8 +9,8 @@ int main()
 
   const int width        = 640;
   const int height       = 480;
-  const int samples      = 16;
-  const int supersamples = 8;
+  const int samples      = 64;
+  const int supersamples = 4;
 
   std::cout << width << "x" << height << " " << samples * (supersamples * supersamples) <<
     " samples per pixels" << std::endl;

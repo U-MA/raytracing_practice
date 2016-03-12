@@ -9,8 +9,9 @@ namespace raytrace
   struct triangle : public shape
   {
     triangle(const vec3& v0, const vec3& v1, const vec3& v2, const raytrace::color& emission,
-             const raytrace::color& color, const reflection_t reflection_type)
-      : v0{v0}, v1{v1}, v2{v2}, emission_{emission}, color_{color}, reflection_type_{reflection_type}
+             const raytrace::color& color, const reflection_t reflection_type, const raytrace::texture* texture = nullptr)
+      : v0{v0}, v1{v1}, v2{v2}, emission_{emission}, color_{color}, reflection_type_{reflection_type},
+        texture_{texture}
     {}
 
     // rayとの交差判定を行う
@@ -74,6 +75,11 @@ namespace raytrace
       return reflection_type_;
     }
 
+    const raytrace::texture* texture() const override
+    {
+      return texture_;
+    }
+
     // 3頂点
     vec3 v0;
     vec3 v1;
@@ -81,6 +87,7 @@ namespace raytrace
     raytrace::color emission_;
     raytrace::color color_;
     reflection_t reflection_type_;
+    const raytrace::texture *texture_;
   };
 
 } // namespace raytrace

@@ -1,6 +1,8 @@
 #ifndef _RAYTRACE_SHAPE_H_
 #define _RAYTRACE_SHAPE_H_
 
+#include "texture.h"
+
 namespace raytrace
 {
   struct shape
@@ -19,6 +21,9 @@ namespace raytrace
 
     // refrection_tを返す
     virtual reflection_t reflection_type() const = 0;
+
+    // textureを返す
+    virtual const texture* texture() const = 0;
   };
 
 } // namespace raytrace

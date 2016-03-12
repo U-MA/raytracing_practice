@@ -9,12 +9,13 @@ namespace raytrace
   struct hitpoint
   {
     hitpoint()
-      : distance(constant::inf), normal(), position()
+      : distance(constant::inf)
     {}
 
     double distance;
     vec3 normal;
     vec3 position;
+    vec3 tex_coords;
   };
 
   struct intersection

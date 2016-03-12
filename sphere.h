@@ -11,8 +11,9 @@ namespace raytrace
   struct sphere : public shape
   {
     sphere(double radius, const vec3& position, const raytrace::color& emission, 
-           const raytrace::color& color, const reflection_t reflection_type)
-      : radius_(radius), position_(position), emission_(emission), color_(color), reflection_type_(reflection_type)
+           const raytrace::color& color, const reflection_t reflection_type, const raytrace::texture* texture = nullptr)
+      : radius_(radius), position_(position), emission_(emission), color_(color), reflection_type_(reflection_type),
+        texture_(texture)
     {}
 
     // rayとの交差判定を行う
@@ -39,8 +40,21 @@ namespace raytrace
         hitpoint->distance = t2;
       }
 
-      hitpoint->position = ray.org + hitpoint->distance * ray.dir;
-      hitpoint->normal   = vec3::normalize(hitpoint->position - position_);
+      hitpoint->position   = ray.org + hitpoint->distance * ray.dir;
+      hitpoint->normal     = vec3::normalize(hitpoint->position - position_);
+
+      // -pi   <= phi   <= pi
+      // -pi/2 <= theta <= pi/2
+      const double phi   = atan2(hitpoint->normal.z, hitpoint->normal.x);
+      const double theta = asin(hitpoint->normal.y);
+
+      // ?? 本当にこれでうまくいくか
+      hitpoint->tex_coords =
+        vec3(
+          (phi + constant::pi) / (2 * constant::pi),
+          (theta + constant::pi / 2) / constant::pi,
+          0);
+
       return true;
     }
 
@@ -56,11 +70,17 @@ namespace raytrace
       return reflection_type_;
     }
 
+    const raytrace::texture* texture() const override
+    {
+      return texture_;
+    }
+
     double radius_;
     vec3 position_;
     raytrace::color emission_;
     raytrace::color color_;
     reflection_t reflection_type_;
+    const raytrace::texture *texture_;
   };
 
 } // namespace raytrace

@@ -73,7 +73,11 @@ namespace raytrace
 
         incoming_radiance = radiance(ray(hitpoint.position, dir), rnd, depth+1);
 
-        weight = now_object.color() / russian_roulette_probability;
+        if (now_object.texture()) {
+          weight = vec3::multiply(now_object.color(), now_object.texture()->color(hitpoint.tex_coords));
+        } else {
+          weight = now_object.color() / russian_roulette_probability;
+        }
       }
       break;
 
