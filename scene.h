@@ -22,6 +22,7 @@ namespace raytrace
     sphere(1e5,  vec3(50.0,    1e5, 81.6),       color(),           color(0.75, 0.75, 0.75), reflection_t::diffuse),    // 床
     sphere(1e5,  vec3(50.0,    -1e5+81.6, 81.6), color(),           color(0.75, 0.75, 0.75), reflection_t::diffuse),    // 天井
     sphere(20.0, vec3(65.0, 20.0, 20.0), color(), color(0.75, 0.75, 0.75), reflection_t::diffuse, &checker),
+    sphere(20.0, vec3(26.0, 16.5, 47.0), color(), color(0.99, 0.99, 0.99), reflection_t::specular, &checker),
     //sphere(20.0, vec3(65.0,    20.0, 20.0),      color(),           color(0.25, 0.75, 0.25), reflection_t::diffuse),    // 緑球
     //sphere(16.5, vec3(27.0,    16.5, 47.0),      color(),           color(0.99, 0.99, 0.99), reflection_t::specular),   // 鏡
     //sphere(16.5, vec3(77.0,    16.5, 78.0),      color(),           color(0.99, 0.99, 0.99), reflection_t::reflection), // ガラス

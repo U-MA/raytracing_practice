@@ -74,6 +74,7 @@ namespace raytrace
         incoming_radiance = radiance(ray(hitpoint.position, dir), rnd, depth+1);
 
         if (now_object.texture()) {
+          // russian_roulette_probabilityで割る必要があるのでは？
           weight = vec3::multiply(now_object.color(), now_object.texture()->color(hitpoint.tex_coords));
         } else {
           weight = now_object.color() / russian_roulette_probability;
@@ -88,7 +89,11 @@ namespace raytrace
         vec3 dir = aray.dir - hitpoint.normal * 2.0 * vec3::dot(hitpoint.normal, aray.dir);
         incoming_radiance = radiance(ray(hitpoint.position, dir),rnd, depth+1);
 
-        weight = now_object.color() / russian_roulette_probability;
+        if (now_object.texture()) {
+          weight = vec3::multiply(now_object.color(), now_object.texture()->color(hitpoint.tex_coords)) / russian_roulette_probability;
+        } else {
+          weight = now_object.color() / russian_roulette_probability;
+        }
       }
       break;
 
